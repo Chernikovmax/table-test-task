@@ -1,0 +1,41 @@
+<div class="table-wrapper">
+  <table class="table">
+    <thead class="table__header">
+      <tr>
+        <th class="table__head-cell">
+          <button class="sort-header-btn" (click)="sortTable('email')">Имя</button>
+        </th>
+        <th class="table__head-cell">
+          <button class="sort-header-btn" (click)="sortTable('name')">Город</button>
+        </th>
+        <th class="table__head-cell">
+          <button class="sort-header-btn" (click)="sortTable('body')">Название публикации</button>
+        </th>
+        <th class="table__head-cell">
+          <button class="sort-header-btn" (click)="sortTable('postId')">Колличество публикаций</button>
+        </th>
+      </tr>
+    </thead>
+    <tfoot></tfoot>
+    <tbody class="table-body">
+      <tr class="table-body__row" *ngFor="let post of posts">
+        <td class="table-body__cell" *ngIf="post.email; else email">
+          {{ post.email }}
+        </td>
+        <ng-template #email></ng-template>
+        <td class="table-body__cell" *ngIf="post.name; else name">
+          {{ post.name }}
+        </td>
+        <ng-template #name></ng-template>
+        <td class="table-body__cell" *ngIf="post.body; else body">
+          {{ post.body }}
+        </td>
+        <ng-template #body></ng-template>
+        <td class="table-body__cell" *ngIf="post.postId; else postId">
+          {{ post.postId }}
+        </td>
+        <ng-template #postId></ng-template>
+      </tr>
+    </tbody>
+  </table>
+</div>
