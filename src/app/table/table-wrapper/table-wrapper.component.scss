@@ -35,6 +35,10 @@
   margin: 0;
 }
 
+.sort-header-btn--active {
+  font-weight: bold;
+}
+
 .table-body__row {
   &:nth-of-type(2n) {
     background-color: #ddeaee;

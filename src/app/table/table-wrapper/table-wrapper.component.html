@@ -3,16 +3,44 @@
     <thead class="table__header">
       <tr>
         <th class="table__head-cell">
-          <button class="sort-header-btn" (click)="sortTable('email')">Имя</button>
+          <button
+            class="sort-header-btn"
+            [class.sort-header-btn--active]="sortedHeader === 'email'"
+            (click)="sortTable('email')"
+          >
+            Имя
+             {{ this.sortedHeader === 'email' && isIncrease ? '▲' : '△' }}{{ this.sortedHeader === 'email' && !isIncrease ? '▼' : '▽' }}
+          </button>
         </th>
         <th class="table__head-cell">
-          <button class="sort-header-btn" (click)="sortTable('name')">Город</button>
+          <button
+            class="sort-header-btn"
+            [class.sort-header-btn--active]="sortedHeader === 'name'"
+            (click)="sortTable('name')"
+          >
+            Город
+            {{ this.sortedHeader === 'name' && isIncrease ? '▲' : '△' }}{{ this.sortedHeader === 'name' && !isIncrease ? '▼' : '▽' }}
+          </button>
         </th>
         <th class="table__head-cell">
-          <button class="sort-header-btn" (click)="sortTable('body')">Название публикации</button>
+          <button
+            class="sort-header-btn"
+            [class.sort-header-btn--active]="sortedHeader === 'body'"
+            (click)="sortTable('body')"
+          >
+            Название публикации
+            {{ this.sortedHeader === 'body' && isIncrease ? '▲' : '△' }}{{ this.sortedHeader === 'body' && !isIncrease ? '▼' : '▽' }}
+          </button>
         </th>
         <th class="table__head-cell">
-          <button class="sort-header-btn" (click)="sortTable('postId')">Колличество публикаций</button>
+          <button
+            class="sort-header-btn"
+            [class.sort-header-btn--active]="sortedHeader === 'postId'"
+            (click)="sortTable('postId')"
+          >
+            Колличество публикаций
+            {{ this.sortedHeader === 'postId' && isIncrease ? '▲' : '△' }}{{ this.sortedHeader === 'postId' && !isIncrease ? '▼' : '▽' }}
+          </button>
         </th>
       </tr>
     </thead>

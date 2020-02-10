@@ -9,7 +9,7 @@ import { Post, PostsService } from '../../services/posts.service';
 export class TableWrapperComponent implements OnInit {
   posts: Post[] = [];
   sortedHeader = '';
-  sortType = true;
+  isIncrease = false;
 
   constructor(private postService: PostsService) {}
 
@@ -20,7 +20,6 @@ export class TableWrapperComponent implements OnInit {
   fetchPosts(): void {
     this.postService.fetchPosts().subscribe(returnedPosts => {
       this.posts = returnedPosts;
-      console.log('returnedPosts', returnedPosts);
     });
   }
 
@@ -32,14 +31,14 @@ export class TableWrapperComponent implements OnInit {
   }
 
   sortTable(title: string): void {
-    const handleSort = (key, sortMethod): void => {
+    const handleSort = (key: string, sortMethod): void => {
       if (this.sortedHeader === key) {
         this.posts.reverse();
-        this.sortType = !this.sortType;
+        this.isIncrease = !this.isIncrease;
         return;
       }
       this.sortedHeader = key;
-      this.sortType = true;
+      this.isIncrease = true;
       this.posts.sort(sortMethod(key));
       return;
     };
