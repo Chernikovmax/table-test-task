@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { Post, PostsService } from '../../services/posts.service';
 
 @Component({
@@ -7,15 +7,24 @@ import { Post, PostsService } from '../../services/posts.service';
   styleUrls: ['./table-wrapper.component.scss']
 })
 export class TableWrapperComponent implements OnInit {
+  @Input() search: string;
   posts: Post[] = [];
   sortedHeader = '';
   isIncrease = false;
+
+  isModalVisible = false;
+  currentPost: Post | null = null;
 
   constructor(private postService: PostsService) {}
 
   ngOnInit(): void {
     this.fetchPosts();
   }
+
+  closeModal = (): void => {
+    this.isModalVisible = false;
+    this.currentPost = null;
+  };
 
   fetchPosts(): void {
     this.postService.fetchPosts().subscribe(returnedPosts => {
@@ -34,5 +43,9 @@ export class TableWrapperComponent implements OnInit {
     this.posts.sort((a, b) => (a[title] > b[title] ? 1 : -1));
     return;
   }
-}
 
+  openModal(id: number) {
+    this.currentPost = this.posts.find(post => post.id === id);
+    this.isModalVisible = true;
+  }
+}

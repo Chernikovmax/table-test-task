@@ -69,7 +69,9 @@
         </td>
         <ng-template #name></ng-template>
         <td class="table-body__cell" *ngIf="post.body; else body">
-          {{ post.body }}
+          <button class="post-btn" (click)="openModal(post.id)">
+            {{ post.body }}
+          </button>
         </td>
         <ng-template #body></ng-template>
         <td class="table-body__cell" *ngIf="post.postId; else postId">
@@ -80,3 +82,4 @@
     </tbody>
   </table>
 </div>
+<app-modal-post *ngIf="isModalVisible" [post]="currentPost" [closeFunc]="closeModal"></app-modal-post>

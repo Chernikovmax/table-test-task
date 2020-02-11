@@ -1,0 +1,11 @@
+<div class="modal-mask" (click)="closeFunc()">
+  <div class="modal-wrapper">
+    <div class="modal__header">
+      <h4 class="modal__header__title">Текст публикации</h4>
+      <button class="modal__close-btn" (click)="closeFunc()">&#9932;</button>
+    </div>
+    <div class="modal__content">
+      <p class="modal__content__text">{{ post.body }}</p>
+    </div>
+  </div>
+</div>
