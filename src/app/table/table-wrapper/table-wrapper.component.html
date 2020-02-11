@@ -1,4 +1,13 @@
 <div class="table-wrapper">
+  <label for="search" class="search-wrapper">
+    <input
+      [(ngModel)]="search"
+      id="search"
+      type="text"
+      class="table-search"
+      placeholder="Введите текст публикации..."
+    />
+  </label>
   <table class="table">
     <thead class="table__header">
       <tr>
@@ -9,7 +18,8 @@
             (click)="sortTable('email')"
           >
             Имя
-             {{ this.sortedHeader === 'email' && isIncrease ? '▲' : '△' }}{{ this.sortedHeader === 'email' && !isIncrease ? '▼' : '▽' }}
+            {{ this.sortedHeader === 'email' && isIncrease ? '▲' : '△'
+            }}{{ this.sortedHeader === 'email' && !isIncrease ? '▼' : '▽' }}
           </button>
         </th>
         <th class="table__head-cell">
@@ -19,7 +29,8 @@
             (click)="sortTable('name')"
           >
             Город
-            {{ this.sortedHeader === 'name' && isIncrease ? '▲' : '△' }}{{ this.sortedHeader === 'name' && !isIncrease ? '▼' : '▽' }}
+            {{ this.sortedHeader === 'name' && isIncrease ? '▲' : '△'
+            }}{{ this.sortedHeader === 'name' && !isIncrease ? '▼' : '▽' }}
           </button>
         </th>
         <th class="table__head-cell">
@@ -29,7 +40,8 @@
             (click)="sortTable('body')"
           >
             Название публикации
-            {{ this.sortedHeader === 'body' && isIncrease ? '▲' : '△' }}{{ this.sortedHeader === 'body' && !isIncrease ? '▼' : '▽' }}
+            {{ this.sortedHeader === 'body' && isIncrease ? '▲' : '△'
+            }}{{ this.sortedHeader === 'body' && !isIncrease ? '▼' : '▽' }}
           </button>
         </th>
         <th class="table__head-cell">
@@ -38,15 +50,16 @@
             [class.sort-header-btn--active]="sortedHeader === 'postId'"
             (click)="sortTable('postId')"
           >
-            Колличество публикаций
-            {{ this.sortedHeader === 'postId' && isIncrease ? '▲' : '△' }}{{ this.sortedHeader === 'postId' && !isIncrease ? '▼' : '▽' }}
+            Комментарии
+            {{ this.sortedHeader === 'postId' && isIncrease ? '▲' : '△'
+            }}{{ this.sortedHeader === 'postId' && !isIncrease ? '▼' : '▽' }}
           </button>
         </th>
       </tr>
     </thead>
     <tfoot></tfoot>
     <tbody class="table-body">
-      <tr class="table-body__row" *ngFor="let post of posts">
+      <tr class="table-body__row" *ngFor="let post of posts | filter: search">
         <td class="table-body__cell" *ngIf="post.email; else email">
           {{ post.email }}
         </td>

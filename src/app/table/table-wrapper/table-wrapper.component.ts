@@ -23,41 +23,16 @@ export class TableWrapperComponent implements OnInit {
     });
   }
 
-  strSort(key) {
-    return (a, b) => (a[key] > b[key] ? 1 : -1);
-  }
-  numSort(key) {
-    return (a, b) => a - b;
-  }
-
   sortTable(title: string): void {
-    const handleSort = (key: string, sortMethod): void => {
-      if (this.sortedHeader === key) {
-        this.posts.reverse();
-        this.isIncrease = !this.isIncrease;
-        return;
-      }
-      this.sortedHeader = key;
-      this.isIncrease = true;
-      this.posts.sort(sortMethod(key));
+    if (this.sortedHeader === title) {
+      this.posts.reverse();
+      this.isIncrease = !this.isIncrease;
       return;
-    };
-
-    switch (title) {
-      case 'email':
-        handleSort('email', this.strSort);
-        break;
-      case 'name':
-        handleSort('name', this.strSort);
-        break;
-      case 'body':
-        handleSort('body', this.strSort);
-        break;
-      case 'postId':
-        handleSort('postId', this.numSort);
-        break;
-      default:
-        return;
     }
+    this.sortedHeader = title;
+    this.isIncrease = true;
+    this.posts.sort((a, b) => (a[title] > b[title] ? 1 : -1));
+    return;
   }
 }
+
