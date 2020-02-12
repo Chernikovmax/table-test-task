@@ -5,6 +5,7 @@
       id="search"
       type="text"
       class="table-search"
+      (keyup)="filter()"
       placeholder="Введите текст публикации..."
     />
   </label>
@@ -14,23 +15,23 @@
         <th class="table__head-cell">
           <button
             class="sort-header-btn"
-            [class.sort-header-btn--active]="sortedHeader === 'email'"
-            (click)="sortTable('email')"
+            [class.sort-header-btn--active]="sortedHeader === 'userId'"
+            (click)="sortTable('userId')"
           >
             Имя
-            {{ this.sortedHeader === 'email' && isIncrease ? '▲' : '△'
-            }}{{ this.sortedHeader === 'email' && !isIncrease ? '▼' : '▽' }}
+            {{ this.sortedHeader === 'userId' && isIncrease ? '▲' : '△'
+            }}{{ this.sortedHeader === 'userId' && !isIncrease ? '▼' : '▽' }}
           </button>
         </th>
         <th class="table__head-cell">
           <button
             class="sort-header-btn"
-            [class.sort-header-btn--active]="sortedHeader === 'name'"
-            (click)="sortTable('name')"
+            [class.sort-header-btn--active]="sortedHeader === 'title'"
+            (click)="sortTable('title')"
           >
             Город
-            {{ this.sortedHeader === 'name' && isIncrease ? '▲' : '△'
-            }}{{ this.sortedHeader === 'name' && !isIncrease ? '▼' : '▽' }}
+            {{ this.sortedHeader === 'title' && isIncrease ? '▲' : '△'
+            }}{{ this.sortedHeader === 'title' && !isIncrease ? '▼' : '▽' }}
           </button>
         </th>
         <th class="table__head-cell">
@@ -47,39 +48,61 @@
         <th class="table__head-cell">
           <button
             class="sort-header-btn"
-            [class.sort-header-btn--active]="sortedHeader === 'postId'"
-            (click)="sortTable('postId')"
+            [class.sort-header-btn--active]="sortedHeader === 'id'"
+            (click)="sortTable('id')"
           >
             Комментарии
-            {{ this.sortedHeader === 'postId' && isIncrease ? '▲' : '△'
-            }}{{ this.sortedHeader === 'postId' && !isIncrease ? '▼' : '▽' }}
+            {{ this.sortedHeader === 'id' && isIncrease ? '▲' : '△'
+            }}{{ this.sortedHeader === 'id' && !isIncrease ? '▼' : '▽' }}
           </button>
         </th>
       </tr>
     </thead>
     <tfoot></tfoot>
-    <tbody class="table-body">
-      <tr class="table-body__row" *ngFor="let post of posts | filter: search">
-        <td class="table-body__cell" *ngIf="post.userId; else email">
+    <tbody class="table-body" *ngIf="search; else allPosts">
+      <tr class="table-body__row" *ngFor="let post of filteredPosts">
+        <td class="table-body__cell" *ngIf="post.userId">
           {{ post.userId.toString() }}
         </td>
-        <ng-template #email></ng-template>
-        <td class="table-body__cell" *ngIf="post.title; else name">
+        <td class="table-body__cell" *ngIf="post.title">
           {{ post.title }}
         </td>
-        <ng-template #name></ng-template>
-        <td class="table-body__cell" *ngIf="post.body; else body">
+        <td class="table-body__cell" *ngIf="post.body">
           <button class="post-btn" (click)="openModal(post.id)">
             {{ post.body }}
           </button>
         </td>
-        <ng-template #body></ng-template>
-        <td class="table-body__cell" *ngIf="post.id; else postId">
+        <td class="table-body__cell" *ngIf="post.id">
           {{ post.id }}
         </td>
-        <ng-template #postId></ng-template>
       </tr>
     </tbody>
+    <ng-template #allPosts>
+      <tbody class="table-body">
+        <tr class="table-body__row" *ngFor="let post of posts">
+          <td class="table-body__cell" *ngIf="post.userId">
+            {{ post.userId.toString() }}
+          </td>
+          <td class="table-body__cell" *ngIf="post.title">
+            {{ post.title }}
+          </td>
+          <td class="table-body__cell" *ngIf="post.body">
+            <button class="post-btn" (click)="openModal(post.id)">
+              {{ post.body }}
+            </button>
+          </td>
+          <td class="table-body__cell" *ngIf="post.id">
+            {{ post.id }}
+          </td>
+        </tr>
+      </tbody>
+    </ng-template>
   </table>
 </div>
-<app-modal-post *ngIf="isModalVisible" [post]="currentPost" [comments]="comments" [isCommentsFetching]="isCommentsFetching" [closeFunc]="closeModal"></app-modal-post>
+<app-modal-post
+  *ngIf="isModalVisible"
+  [post]="currentPost"
+  [comments]="comments"
+  [isCommentsFetching]="isCommentsFetching"
+  [closeFunc]="closeModal"
+></app-modal-post>

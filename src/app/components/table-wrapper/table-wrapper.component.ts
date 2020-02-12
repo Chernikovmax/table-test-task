@@ -1,62 +1,78 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Post, Comment, PostsService } from '../../services/posts.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-table-wrapper',
   templateUrl: './table-wrapper.component.html',
   styleUrls: ['./table-wrapper.component.scss']
 })
-export class TableWrapperComponent implements OnInit {
+export class TableWrapperComponent implements OnInit, OnDestroy {
   @Input() search: string;
   posts: Post[] = [];
+  filteredPosts: Post[] = [];
   comments: Comment[] = [];
   sortedHeader = '';
   isIncrease = false;
   isCommentsFetching = false;
-
   isModalVisible = false;
   currentPost: Post | null = null;
-
+  subscriptions$: Subscription[] = [];
   constructor(private postService: PostsService) {}
 
   ngOnInit(): void {
-    this.fetchPosts();
+    this.subscriptions$.push(this.fetchPosts());
+  }
+
+  ngOnDestroy() {
+    this.subscriptions$.forEach(subscription => subscription.unsubscribe());
   }
 
   closeModal = (): void => {
     this.isModalVisible = false;
     this.currentPost = null;
     this.comments = null;
-  }
+  };
 
-  fetchPosts(): void {
-    this.postService.fetchPosts().subscribe(returnedPosts => {
+  fetchPosts(): Subscription {
+    return this.postService.fetchPosts().subscribe(returnedPosts => {
       this.posts = returnedPosts;
     });
   }
-  fetchComments(id: number): void {
+  fetchComments(id: number): Subscription {
     this.isCommentsFetching = true;
     this.isModalVisible = true;
-    this.postService.fetchComments(id).subscribe(respComments => {
+    return this.postService.fetchComments(id).subscribe(respComments => {
       this.comments = respComments;
       this.isCommentsFetching = false;
     });
   }
 
   sortTable(title: string): void {
+    const posts = this.search ? this.filteredPosts : this.posts;
     if (this.sortedHeader === title) {
-      this.posts.reverse();
+      posts.reverse();
       this.isIncrease = !this.isIncrease;
       return;
     }
     this.sortedHeader = title;
     this.isIncrease = true;
-    this.posts.sort((a, b) => (a[title] > b[title] ? 1 : -1));
+    posts.sort((a, b) => (a[title] > b[title] ? 1 : -1));
     return;
+  }
+
+  filter(): void {
+    if (!this.search) {
+      this.filteredPosts = [];
+      return;
+    }
+    this.filteredPosts = this.posts.filter(post =>
+      post.body.includes(this.search)
+    );
   }
 
   openModal(id: number) {
     this.currentPost = this.posts.find(post => post.id === id);
-    this.fetchComments(id);
+    this.subscriptions$.push(this.fetchComments(id));
   }
 }

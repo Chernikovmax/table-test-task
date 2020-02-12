@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-// I made wrong structure, because there's no mocks in jsonplaceholder that will satisfy requirements in test task
 export interface Post {
   userId: number;
-  id: number;
   title: string;
   body: string;
+  id: number;
 }
+
 export interface Comment {
   postId: number;
   id: number;
