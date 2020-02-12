@@ -6,6 +6,19 @@
     </div>
     <div class="modal__content">
       <p class="modal__content__text">{{ post.body }}</p>
+      <div class="loader" *ngIf="isCommentsFetching; else commentaries"></div>
+      <ng-template #commentaries>
+        <div class="comments">
+          <div class="comment" *ngFor="let comment of comments">
+            <span class="comment__user"
+              >{{ comment.name | titlecase }} ({{
+                comment.email | uppercase
+              }})</span
+            >
+            <span class="comment__text">{{ comment.body }}</span>
+          </div>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>

@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Post} from '../../services/posts.service';
+import {Post, Comment} from '../../services/posts.service';
 
 @Component({
   selector: 'app-modal-post',
@@ -8,6 +8,8 @@ import {Post} from '../../services/posts.service';
 })
 export class ModalPostComponent {
   @Input() post: Post | null;
+  @Input() comments: Comment[] | null;
+  @Input() isCommentsFetching: boolean;
   @Input() closeFunc: () => void;
 
   constructor() { }

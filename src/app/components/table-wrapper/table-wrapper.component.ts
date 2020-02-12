@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
-import { Post, PostsService } from '../../services/posts.service';
+import { Post, Comment, PostsService } from '../../services/posts.service';
 
 @Component({
   selector: 'app-table-wrapper',
@@ -9,8 +9,10 @@ import { Post, PostsService } from '../../services/posts.service';
 export class TableWrapperComponent implements OnInit {
   @Input() search: string;
   posts: Post[] = [];
+  comments: Comment[] = [];
   sortedHeader = '';
   isIncrease = false;
+  isCommentsFetching = false;
 
   isModalVisible = false;
   currentPost: Post | null = null;
@@ -24,11 +26,20 @@ export class TableWrapperComponent implements OnInit {
   closeModal = (): void => {
     this.isModalVisible = false;
     this.currentPost = null;
-  };
+    this.comments = null;
+  }
 
   fetchPosts(): void {
     this.postService.fetchPosts().subscribe(returnedPosts => {
       this.posts = returnedPosts;
+    });
+  }
+  fetchComments(id: number): void {
+    this.isCommentsFetching = true;
+    this.isModalVisible = true;
+    this.postService.fetchComments(id).subscribe(respComments => {
+      this.comments = respComments;
+      this.isCommentsFetching = false;
     });
   }
 
@@ -46,6 +57,6 @@ export class TableWrapperComponent implements OnInit {
 
   openModal(id: number) {
     this.currentPost = this.posts.find(post => post.id === id);
-    this.isModalVisible = true;
+    this.fetchComments(id);
   }
 }
