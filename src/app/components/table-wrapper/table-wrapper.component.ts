@@ -87,7 +87,7 @@ export class TableWrapperComponent implements OnInit, OnDestroy {
       return;
     }
     this.filteredPosts = this.posts.filter(post =>
-      post.body.includes(this.search)
+      post.title.includes(this.search) || post.body.includes(this.search)
     );
   }
 
