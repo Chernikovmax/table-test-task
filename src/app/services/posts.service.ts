@@ -9,12 +9,32 @@ export interface Post {
   id: number;
 }
 
+export interface ExtendedPost {
+  userId: number;
+  title: string;
+  body: string;
+  id: number;
+  userName: number;
+  userCity: number;
+  comments?: Comment[];
+}
+
 export interface Comment {
   postId: number;
   id: number;
   name: string;
   email: string;
   body: string;
+}
+
+export interface User {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  address: {
+    city: string;
+  };
 }
 
 @Injectable({
@@ -32,5 +52,9 @@ export class PostsService {
     return this.http.get<Comment[]>(
       `https://jsonplaceholder.typicode.com/posts/${id}/comments`
     );
+  }
+
+  fetchUsers(): Observable<User[]> {
+    return this.http.get<User[]>('https://jsonplaceholder.typicode.com/users');
   }
 }

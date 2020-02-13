@@ -1,24 +1,21 @@
 <div class="modal-mask" (click)="closeFunc()">
   <div class="modal-wrapper">
     <div class="modal__header">
-      <h4 class="modal__header__title">Текст публикации</h4>
+      <h4 class="modal__header__title">{{ post.title }}</h4>
       <button class="modal__close-btn" (click)="closeFunc()">&#9932;</button>
     </div>
     <div class="modal__content">
       <p class="modal__content__text">{{ post.body }}</p>
-      <div class="loader" *ngIf="isCommentsFetching; else commentaries"></div>
-      <ng-template #commentaries>
-        <div class="comments">
-          <div class="comment" *ngFor="let comment of comments">
-            <span class="comment__user"
-              >{{ comment.name | titlecase }} ({{
-                comment.email | uppercase
-              }})</span
-            >
-            <span class="comment__text">{{ comment.body }}</span>
-          </div>
+      <div class="comments">
+        <div class="comment" *ngFor="let comment of post.comments">
+          <span class="comment__user"
+            >{{ comment.name | titlecase }} ({{
+              comment.email | uppercase
+            }})</span
+          >
+          <span class="comment__text">{{ comment.body }}</span>
         </div>
-      </ng-template>
+      </div>
     </div>
   </div>
 </div>

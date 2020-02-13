@@ -1,6 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Post, Comment, PostsService } from '../../services/posts.service';
-import { Subscription } from 'rxjs';
+import {
+  Post,
+  Comment,
+  PostsService,
+  User,
+  ExtendedPost
+} from '../../services/posts.service';
+import { forkJoin, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-table-wrapper',
@@ -9,19 +15,18 @@ import { Subscription } from 'rxjs';
 })
 export class TableWrapperComponent implements OnInit, OnDestroy {
   @Input() search: string;
-  posts: Post[] = [];
-  filteredPosts: Post[] = [];
-  comments: Comment[] = [];
+  posts = [];
+  filteredPosts: ExtendedPost[] = [];
   sortedHeader = '';
   isIncrease = false;
-  isCommentsFetching = false;
   isModalVisible = false;
-  currentPost: Post | null = null;
-  subscriptions$: Subscription[] = [];
+  currentPost: ExtendedPost | null = null;
+  subscriptions$ = [];
+
   constructor(private postService: PostsService) {}
 
   ngOnInit(): void {
-    this.subscriptions$.push(this.fetchPosts());
+    this.subscriptions$.push(this.fetchData());
   }
 
   ngOnDestroy() {
@@ -31,20 +36,32 @@ export class TableWrapperComponent implements OnInit, OnDestroy {
   closeModal = (): void => {
     this.isModalVisible = false;
     this.currentPost = null;
-    this.comments = null;
   };
 
-  fetchPosts(): Subscription {
-    return this.postService.fetchPosts().subscribe(returnedPosts => {
-      this.posts = returnedPosts;
-    });
-  }
-  fetchComments(id: number): Subscription {
-    this.isCommentsFetching = true;
-    this.isModalVisible = true;
-    return this.postService.fetchComments(id).subscribe(respComments => {
-      this.comments = respComments;
-      this.isCommentsFetching = false;
+  fetchData(): Subscription {
+    this.subscriptions$.push(this.postService.fetchUsers());
+    this.subscriptions$.push(this.postService.fetchPosts());
+    return forkJoin(this.subscriptions$).subscribe((val: [User[], Post[]]) => {
+      const [users, posts] = val;
+      posts.forEach((post, ind) => {
+        const postOwner: User = users.find(
+          userObj => userObj.id === post.userId
+        );
+        const result: {} = {
+          userName: postOwner.name,
+          userCity: postOwner.address.city,
+          ...post
+        };
+        this.posts.push(result);
+        this.subscriptions$.push(
+          this.postService
+            .fetchComments(post.id)
+            .subscribe((response: Comment[]) => {
+              const currentPost = this.posts[ind];
+              currentPost.comments = response;
+            })
+        );
+      });
     });
   }
 
@@ -57,6 +74,9 @@ export class TableWrapperComponent implements OnInit, OnDestroy {
     }
     this.sortedHeader = title;
     this.isIncrease = true;
+    if (title === 'comments') {
+      posts.sort((a, b) => (a[title].length > b[title].length ? 1 : -1));
+    }
     posts.sort((a, b) => (a[title] > b[title] ? 1 : -1));
     return;
   }
@@ -73,6 +93,6 @@ export class TableWrapperComponent implements OnInit, OnDestroy {
 
   openModal(id: number) {
     this.currentPost = this.posts.find(post => post.id === id);
-    this.subscriptions$.push(this.fetchComments(id));
+    this.isModalVisible = true;
   }
 }

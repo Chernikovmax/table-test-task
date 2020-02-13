@@ -15,12 +15,23 @@
         <th class="table__head-cell">
           <button
             class="sort-header-btn"
-            [class.sort-header-btn--active]="sortedHeader === 'userId'"
-            (click)="sortTable('userId')"
+            [class.sort-header-btn--active]="sortedHeader === 'userName'"
+            (click)="sortTable('userName')"
           >
             Имя
-            {{ this.sortedHeader === 'userId' && isIncrease ? '▲' : '△'
-            }}{{ this.sortedHeader === 'userId' && !isIncrease ? '▼' : '▽' }}
+            {{ this.sortedHeader === 'userName' && isIncrease ? '▲' : '△'
+            }}{{ this.sortedHeader === 'userName' && !isIncrease ? '▼' : '▽' }}
+          </button>
+        </th>
+        <th class="table__head-cell">
+          <button
+            class="sort-header-btn"
+            [class.sort-header-btn--active]="sortedHeader === 'userCity'"
+            (click)="sortTable('userCity')"
+          >
+            Город
+            {{ this.sortedHeader === 'userCity' && isIncrease ? '▲' : '△'
+            }}{{ this.sortedHeader === 'userCity' && !isIncrease ? '▼' : '▽' }}
           </button>
         </th>
         <th class="table__head-cell">
@@ -29,7 +40,7 @@
             [class.sort-header-btn--active]="sortedHeader === 'title'"
             (click)="sortTable('title')"
           >
-            Город
+            Название публикации
             {{ this.sortedHeader === 'title' && isIncrease ? '▲' : '△'
             }}{{ this.sortedHeader === 'title' && !isIncrease ? '▼' : '▽' }}
           </button>
@@ -37,23 +48,12 @@
         <th class="table__head-cell">
           <button
             class="sort-header-btn"
-            [class.sort-header-btn--active]="sortedHeader === 'body'"
-            (click)="sortTable('body')"
-          >
-            Название публикации
-            {{ this.sortedHeader === 'body' && isIncrease ? '▲' : '△'
-            }}{{ this.sortedHeader === 'body' && !isIncrease ? '▼' : '▽' }}
-          </button>
-        </th>
-        <th class="table__head-cell">
-          <button
-            class="sort-header-btn"
-            [class.sort-header-btn--active]="sortedHeader === 'id'"
-            (click)="sortTable('id')"
+            [class.sort-header-btn--active]="sortedHeader === 'comments'"
+            (click)="sortTable('comments')"
           >
             Комментарии
-            {{ this.sortedHeader === 'id' && isIncrease ? '▲' : '△'
-            }}{{ this.sortedHeader === 'id' && !isIncrease ? '▼' : '▽' }}
+            {{ this.sortedHeader === 'comments' && isIncrease ? '▲' : '△'
+            }}{{ this.sortedHeader === 'comments' && !isIncrease ? '▼' : '▽' }}
           </button>
         </th>
       </tr>
@@ -61,48 +61,49 @@
     <tfoot></tfoot>
     <tbody class="table-body" *ngIf="search; else allPosts">
       <tr class="table-body__row" *ngFor="let post of filteredPosts">
-        <td class="table-body__cell" *ngIf="post.userId">
-          {{ post.userId.toString() }}
+        <td class="table-body__cell" *ngIf="post.userName">
+          {{ post.userName }}
+        </td>
+        <td class="table-body__cell" *ngIf="post.userCity">
+          {{ post.userCity }}
         </td>
         <td class="table-body__cell" *ngIf="post.title">
-          {{ post.title }}
-        </td>
-        <td class="table-body__cell" *ngIf="post.body">
           <button class="post-btn" (click)="openModal(post.id)">
-            {{ post.body }}
+            {{ post.title }}
           </button>
         </td>
-        <td class="table-body__cell" *ngIf="post.id">
-          {{ post.id }}
+        <td class="table-body__cell" *ngIf="post && post.comments">
+          {{ post.comments.length }}
         </td>
       </tr>
     </tbody>
     <ng-template #allPosts>
       <tbody class="table-body">
         <tr class="table-body__row" *ngFor="let post of posts">
-          <td class="table-body__cell" *ngIf="post.userId">
-            {{ post.userId.toString() }}
+          <td class="table-body__cell" *ngIf="post.userName">
+            {{ post.userName }}
+          </td>
+          <td class="table-body__cell" *ngIf="post.userCity">
+            {{ post.userCity }}
           </td>
           <td class="table-body__cell" *ngIf="post.title">
-            {{ post.title }}
-          </td>
-          <td class="table-body__cell" *ngIf="post.body">
             <button class="post-btn" (click)="openModal(post.id)">
-              {{ post.body }}
+              {{ post.title }}
             </button>
           </td>
-          <td class="table-body__cell" *ngIf="post.id">
-            {{ post.id }}
+          <td class="table-body__cell" *ngIf="post && post.comments; else loader">
+            {{ post.comments.length }}
           </td>
         </tr>
       </tbody>
+    </ng-template>
+    <ng-template #loader>
+      <div class="loader">Загружаются...</div>
     </ng-template>
   </table>
 </div>
 <app-modal-post
   *ngIf="isModalVisible"
   [post]="currentPost"
-  [comments]="comments"
-  [isCommentsFetching]="isCommentsFetching"
   [closeFunc]="closeModal"
 ></app-modal-post>
